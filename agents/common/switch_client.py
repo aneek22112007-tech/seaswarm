@@ -57,6 +57,11 @@ class SwitchClient:
         response.raise_for_status()
         return response.json()
 
+    def subscribers(self) -> list[str]:
+        response = self.http.get(f"{self.base_url}/v1/rooms/{self.room_id}/subscribers")
+        response.raise_for_status()
+        return list(response.json().get("agents") or [])
+
     def history(self) -> list[dict]:
         response = self.http.get(f"{self.base_url}/v1/rooms/{self.room_id}/history")
         response.raise_for_status()
