@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SeaSwarm · Agents propose, humans dispose</title><meta name="description" content="Switch-powered, human-governed search-and-rescue coordination room for coastal fishers.">
+<link rel="stylesheet" href="style.css"></head><body>
+<header><h1>🌊 SeaSwarm</h1><p class="tag"><span class="typed">Agents propose. Humans dispose.</span></p>
+<p style="max-width:640px;margin-top:1rem">A Switch-powered room where three AI agents and named humans co-run a fishing-boat search and support the family, in coastal Maharashtra. Nothing irreversible leaves the room until a named person signs off in the thread.</p>
+<div class="btns"><a class="btn" href="#replay">▶ Watch the Sagar-4 replay</a><a class="btn o" href="https://github.com/aneek22112007-tech/seaswarm">GitHub repo</a><a class="btn o" href="https://github.com/aneek22112007-tech/seaswarm/blob/main/BLOG.md">Read the blog</a></div>
+<div class="sos"></div><div class="boat">⛵</div><div class="wave"></div><div class="wave b"></div></header>
+<section><h2>The problem</h2><p style="max-width:800px">Fishing villages already coordinate in Telegram and WhatsApp groups. When a boat is overdue, that chat fails: the last-known position is buried in scrollback, nobody knows who searched which stretch, and there is no record of who approved the Coast Guard call. SeaSwarm turns the same room into a governed, auditable operation.</p></section>
+<section><h2>Three agents, one room</h2><div class="grid">
+<div class="card"><div class="i">🧭</div><h3>Context</h3><p>Finds the boat in room history and the register, adds wind, sea state and tide, computes a drift cone and daylight left, and posts a one-screen summary.</p></div>
+<div class="card"><div class="i">🗺️</div><h3>Options</h3><p>Splits the cone into sectors and posts exactly three plans with coverage, time, fuel, INR cost, daylight margin and risk flags. Re-plans on "Sector-1 clear" and refuses two boats in one sector.</p></div>
+<div class="card"><div class="i">🛟</div><h3>Action</h3><p>Stores the Coast Guard / marine police escalation as a pending approval, matches the family to welfare and insurance schemes, pins the operation checklist and records evidence.</p></div>
+<div class="card"><div class="i">🔒</div><h3>Human gate</h3><p>Escalation, spending, outside messages, scheme outreach and closing the search wait for <code>Approved — &lt;action&gt;</code> from an authorised role. The wrong role is refused on screen.</p></div>
+</div></section>
+<section id="replay"><h2>Replay: Sagar-4, overdue off Harnai</h2><p>3 crew, out of Harnai, Ratnagiri. Overdue 2 hours, last radio fix near a reef 6 km offshore, 4 hours of daylight left. Room clock 15 Jan 2026, 14:30 IST. The plan figures below come from the repo's <code>core/</code> functions.</p>
+<div class="ctrl"><button id="play">▶ Play</button><button id="reset">↺ Reset</button></div><div class="room" id="room"></div></section>
+<section><h2>The kill switch</h2><p>Same two planning passes, with and without room persistence (<code>make killswitch</code>, logs from <code>logs/</code>).</p><div class="cmp">
+<pre class="good">PERSISTENCE=on
+sectors_after_two_passes=3
+sector_rows=Sector-1 x1, Sector-2 x1, Sector-3 x1
+stored_approvals=1
+approver=ramesh
+sign-off reply: ramesh (community_leader) approved escalation.</pre>
+<pre class="bad">PERSISTENCE=off
+sectors_after_two_passes=6
+sector_rows=Sector-1 x2, Sector-2 x2, Sector-3 x2
+stored_approvals=0
+approver=(none)
+sign-off reply: No pending approval for escalation.
+The sign-off was not applied.</pre></div><p style="margin-top:1rem"><b>Remove the room and the operation collapses.</b> That is why Switch is the product.</p></section>
+<section><h2>Run it</h2><pre>git clone https://github.com/aneek22112007-tech/seaswarm && cd seaswarm
+make up     # Postgres, Mattermost, Switch, 3 agents
+make demo   # seed + replay Sagar-4 in #sar-harnai
+make audit  # Markdown + PDF audit export</pre><p>Mattermost on :8065, Switch console on :8090. Single-VPS deploy with Docker + Caddy: <a href="https://github.com/aneek22112007-tech/seaswarm/blob/main/deploy/VPS.md">deploy/VPS.md</a>.</p></section>
+<section><h2>Impact</h2><div class="grid"><div class="card"><div class="i">🌍</div><h3>UN SDG 14</h3><p>Life Below Water. Safety for small-scale fishers.</p></div><div class="card"><div class="i">🚨</div><h3>Disaster management</h3><p>The same governance template fits flood response, factory safety and health-worker rooms.</p></div><div class="card"><div class="i">🏆</div><h3>Track fit</h3><p>Best Business Workflow; Best Blog; Code with Wispr.</p></div></div></section>
+<footer>SeaSwarm · MIT License · <a href="https://github.com/aneek22112007-tech/seaswarm">aneek22112007-tech/seaswarm</a></footer>
+<script src="replay.js"></script></body></html>
