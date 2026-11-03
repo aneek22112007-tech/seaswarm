@@ -38,11 +38,24 @@ class Report:
 
 def run_mode(database: Path, persistence: str) -> Report:
     database.parent.mkdir(parents=True, exist_ok=True)
+    keys = ("DATABASE_URL", "PERSISTENCE", "DATA_DIR", "ROOM_TEMPLATE", "LLM_API_KEY")
+    previous = {key: os.environ.get(key) for key in keys}
     os.environ["DATABASE_URL"] = f"sqlite:///{database}"
     os.environ["PERSISTENCE"] = persistence
     os.environ["DATA_DIR"] = str(ROOT / "data")
     os.environ["ROOM_TEMPLATE"] = str(ROOT / "room_templates" / "sar_room.yaml")
     os.environ["LLM_API_KEY"] = ""
+    try:
+        return _run_mode(persistence)
+    finally:
+        for key, value in previous.items():
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
+
+
+def _run_mode(persistence: str) -> Report:
     engine = init_db()
     with session_scope(engine) as session:
         session.add(

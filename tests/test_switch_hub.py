@@ -48,6 +48,14 @@ def test_update_rewrites_one_message():
     assert hub.update("sar-harnai", "missing", "nope") is None
 
 
+def test_subscribers_names_the_connected_agent():
+    hub = Hub()
+    queue = hub.subscribe("sar-harnai", "context")
+    assert hub.subscribers("sar-harnai") == ["context"]
+    hub.unsubscribe(queue)
+    assert hub.subscribers("sar-harnai") == []
+
+
 def test_actor_type_marks_agents():
     assert actor_type_for("context") == "agent"
     assert actor_type_for("ramesh") == "human"

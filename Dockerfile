@@ -16,6 +16,7 @@ COPY prompts ./prompts
 COPY room_templates ./room_templates
 COPY alembic.ini ./
 COPY alembic ./alembic
+COPY scripts ./scripts
 
 RUN pip install --no-cache-dir .
 

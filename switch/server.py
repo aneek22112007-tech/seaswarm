@@ -95,9 +95,13 @@ def create_app(*, enable_bridge: bool | None = None) -> FastAPI:
     def history(room_id: str):
         return app.state.hub.history(room_id)
 
+    @app.get("/v1/rooms/{room_id}/subscribers")
+    def subscribers(room_id: str):
+        return {"agents": app.state.hub.subscribers(room_id)}
+
     @app.get("/v1/events")
     async def events(room_id: str, agent: str = "console"):
-        queue = app.state.hub.subscribe(room_id)
+        queue = app.state.hub.subscribe(room_id, agent)
         logger.info("sse subscribe room=%s agent=%s", room_id, agent)
 
         async def generate():
@@ -160,7 +164,10 @@ def _deliver_agent(app: FastAPI, room_id: str, body: MessageIn) -> dict:
         message_id = posted["id"]
         app.state.seen_post_ids.add(message_id)
         if body.pin:
-            mm.pin_post(token=token, post_id=message_id)
+            try:
+                mm.pin_post(token=token, post_id=message_id)
+            except Exception:
+                logger.exception("pin failed for %s", message_id)
     event = make_event(
         room_id=room_id,
         username=body.agent,
