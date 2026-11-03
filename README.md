@@ -53,6 +53,10 @@ Every irreversible action goes through `agents/common/gate.py` and is stored as 
 
 `make killswitch` runs the same two planning passes twice. With persistence on, the second pass keeps three sectors and Ramesh's sign-off is stored. With `PERSISTENCE=off` the agents ignore the database, the second pass inserts the sectors again, and the sign-off is dropped. The two logs are `logs/persistence-on.txt` and `logs/persistence-off.txt`.
 
+## Optional chat doors
+
+Telegram and Discord stay off unless you set `TELEGRAM_ENABLED` or `DISCORD_ENABLED`. `make` does not start them. Bring the adapter up with `docker compose --profile adapters up -d adapters`. It listens on port 8091. While the flags are false, `/telegram` and `/discord` acknowledge the payload and do not post into the room. A forwarded line uses the sender's username, so `ramesh` on Telegram is the same role as `ramesh` in Mattermost.
+
 ## Deploy
 
 A single VPS uses Docker and Caddy. The Caddyfile, the systemd unit, and the steps are in [deploy/VPS.md](deploy/VPS.md).
