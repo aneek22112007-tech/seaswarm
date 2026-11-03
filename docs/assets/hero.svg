@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" width="100%">
+<defs><linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1d3a"/><stop offset="1" stop-color="#11487a"/></linearGradient>
+<style>.t{font:800 72px 'Segoe UI',Helvetica,Arial,sans-serif;fill:#fff;letter-spacing:4px}.s{font:500 22px 'Segoe UI',Helvetica,Arial,sans-serif;fill:#9fd8ff}
+.w1{animation:m 9s linear infinite}.w2{animation:m 6s linear infinite reverse}.w3{animation:m 4s linear infinite}
+@keyframes m{from{transform:translateX(0)}to{transform:translateX(-600px)}}
+.b{animation:bob 3s ease-in-out infinite;transform-origin:900px 200px}@keyframes bob{50%{transform:translateY(-6px) rotate(-3deg)}}
+.p{animation:pulse 2s ease-out infinite;transform-origin:900px 170px}@keyframes pulse{from{transform:scale(.3);opacity:1}to{transform:scale(2.5);opacity:0}}
+.f{animation:fade 1.6s ease-out both}@keyframes fade{from{opacity:0;transform:translateY(12px)}}</style></defs>
+<rect width="1200" height="300" fill="url(#s)"/>
+<circle class="p" cx="900" cy="170" r="30" fill="none" stroke="#ff6b6b" stroke-width="3"/>
+<g class="b"><path d="M870 195 h60 l-10 15 h-40z" fill="#ffb347"/><rect x="897" y="165" width="3" height="30" fill="#fff"/><path d="M900 167 l18 22 h-18z" fill="#fff"/></g>
+<g class="w1" opacity=".35"><path d="M0 215 q75-20 150 0 t150 0 t150 0 t150 0 t150 0 t150 0 t150 0 t150 0 t150 0 V300 H0z" fill="#3fa9f5"/></g>
+<g class="w2" opacity=".5"><path d="M0 235 q75-18 150 0 t150 0 t150 0 t150 0 t150 0 t150 0 t150 0 t150 0 t150 0 V300 H0z" fill="#1e7fd0"/></g>
+<g class="w3"><path d="M0 258 q75-14 150 0 t150 0 t150 0 t150 0 t150 0 t150 0 t150 0 t150 0 t150 0 V300 H0z" fill="#0d5fa8"/></g>
+<text class="t f" x="70" y="120">🌊 SeaSwarm</text>
+<text class="s f" x="74" y="165">Agents propose. Humans dispose.</text>
+<text class="s f" x="74" y="195" style="font-size:16px;fill:#cfe9ff">Human-governed search-and-rescue room for coastal fishers · Switch</text>
+</svg>
