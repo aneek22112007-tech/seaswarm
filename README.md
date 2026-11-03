@@ -16,7 +16,9 @@
 
 <h3 align="center">A Switch-powered coordination room for fishing-boat search-and-rescue and family support in coastal Maharashtra.</h3>
 
-<p align="center"><a href="https://aneek22112007-tech.github.io/seaswarm/"><b>▶ Open the animated showcase and Sagar-4 replay</b></a></p>
+<p align="center"><a href="https://aneek22112007-tech.github.io/seaswarm/"><b>🌊 Open the 3D landing page</b></a> · <a href="https://aneek22112007-tech.github.io/seaswarm/replay/"><b>▶ Sagar-4 replay</b></a></p>
+
+<p align="center"><a href="https://aneek22112007-tech.github.io/seaswarm/"><img src="docs/assets/landing-3d-hero.png" alt="SeaSwarm 3D landing page: Sagar-4 with SOS beacon on a dusk ocean" width="32%"></a> <a href="https://aneek22112007-tech.github.io/seaswarm/#gate"><img src="docs/assets/landing-3d-gate.png" alt="Human gate approval stamp" width="32%"></a> <a href="https://aneek22112007-tech.github.io/seaswarm/#audit"><img src="docs/assets/landing-3d-audit.png" alt="Search sectors cleared, audit trail" width="32%"></a></p>
 
 ---
 
@@ -160,7 +162,7 @@ Off unless `TELEGRAM_ENABLED` or `DISCORD_ENABLED` is set. Start with `docker co
 
 ## 🌐 Deploy
 
-A single VPS with Docker and Caddy. The Caddyfile, systemd unit and steps are in [deploy/VPS.md](deploy/VPS.md). The static showcase lives in [`docs/`](docs/) and is served by GitHub Pages at **https://aneek22112007-tech.github.io/seaswarm/**.
+A single VPS with Docker and Caddy. The Caddyfile, systemd unit and steps are in [deploy/VPS.md](deploy/VPS.md). The 3D landing page (Three.js Gerstner ocean, GSAP scroll story, no build step) lives in [`docs/`](docs/) and is served by GitHub Pages at **https://aneek22112007-tech.github.io/seaswarm/**; the 2D replay is at [`/replay/`](https://aneek22112007-tech.github.io/seaswarm/replay/).
 
 ## 🌍 Impact & track fit
 
