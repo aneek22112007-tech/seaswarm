@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 220" width="100%">
+<style>text{font:600 15px 'Segoe UI',Helvetica,Arial,sans-serif;fill:#fff;text-anchor:middle}.sm{font-size:11px;font-weight:400;fill:#d6ecff}
+.l{stroke:#7cc4ff;stroke-width:3;stroke-dasharray:8 8;animation:d 1s linear infinite;fill:none}@keyframes d{to{stroke-dashoffset:-16}}
+.dot{animation:run 4s linear infinite}@keyframes run{0%{transform:translateX(0);opacity:0}5%{opacity:1}95%{opacity:1}100%{transform:translateX(800px);opacity:0}}
+.g{animation:glow 2s ease-in-out infinite}@keyframes glow{50%{opacity:.75}}</style>
+<rect width="1000" height="220" rx="16" fill="#0b1d3a"/>
+<path class="l" d="M150 110 H850"/>
+<rect x="30" y="70" width="140" height="80" rx="12" fill="#1565c0"/><text x="100" y="105">🧭 Context</text><text class="sm" x="100" y="125">drift cone · daylight</text>
+<rect x="230" y="70" width="140" height="80" rx="12" fill="#00838f"/><text x="300" y="105">🗺️ Options</text><text class="sm" x="300" y="125">3 plans · INR · risk</text>
+<rect x="430" y="70" width="140" height="80" rx="12" fill="#6a1b9a"/><text x="500" y="105">🛟 Action</text><text class="sm" x="500" y="125">pending approval</text>
+<g class="g"><rect x="630" y="60" width="150" height="100" rx="12" fill="#f9a825"/><text x="705" y="100" style="fill:#1a1a1a">🔒 Human Gate</text><text class="sm" x="705" y="122" style="fill:#3a2a00">"Approved — escalation"</text><text class="sm" x="705" y="140" style="fill:#3a2a00">named role only</text></g>
+<rect x="830" y="70" width="140" height="80" rx="12" fill="#2e7d32"/><text x="900" y="105">📜 Audit</text><text class="sm" x="900" y="125">Markdown + PDF</text>
+<circle class="dot" cx="100" cy="185" r="7" fill="#ff6b6b"/><text class="sm" x="500" y="208">every message, assignment and sign-off lands in the room's shared history</text>
+</svg>
