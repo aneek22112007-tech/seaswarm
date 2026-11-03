@@ -57,7 +57,8 @@ def test_create_post_sends_the_bearer_token():
 
 def test_channel_posts_are_returned_oldest_first():
     def handler(request: httpx.Request) -> httpx.Response:
-        assert request.url.params["since"] == "p1"
+        assert request.url.params["after"] == "p1"
+        assert "since" not in request.url.params
         return httpx.Response(
             200,
             json={

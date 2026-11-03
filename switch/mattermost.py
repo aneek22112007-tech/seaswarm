@@ -227,7 +227,10 @@ class Mattermost:
         channel_id: str,
         since: str | None = None,
     ) -> list[dict]:
-        params: dict[str, str | int] = {"since": since} if since else {"page": 0, "per_page": 100}
+        # `since` is a millisecond timestamp. A post id belongs in `after`.
+        params: dict[str, str | int] = (
+            {"after": since, "per_page": 100} if since else {"page": 0, "per_page": 100}
+        )
         response = self._request(
             "GET",
             f"/api/v4/channels/{channel_id}/posts",

@@ -71,9 +71,15 @@ class SwitchClient:
         self.http.close()
 
 
-def events_from_sse(messages: Iterable) -> Iterator[dict]:
-    """Yield JSON events from SSE message objects. Blank comments are ignored."""
-    for message in messages:
+def events_from_sse(messages: object) -> Iterator[dict]:
+    """Yield JSON events from SSE message objects. Blank comments are ignored.
+
+    sseclient-py 1.9 is not iterable. It yields from events() over a byte stream.
+    A plain sequence of message objects still works for tests.
+    """
+    reader = getattr(messages, "events", None)
+    stream: Iterable = reader() if callable(reader) else messages
+    for message in stream:
         data = getattr(message, "data", "") or ""
         if not data or data.startswith(":"):
             continue
@@ -81,7 +87,14 @@ def events_from_sse(messages: Iterable) -> Iterator[dict]:
 
 
 def iter_events(url: str) -> Iterator[dict]:
-    """Block on a Switch SSE stream. sseclient uses requests; posts use httpx."""
+    """Block on a Switch SSE stream and yield decoded events.
+
+    Keep the read timeout open. The room sends a comment ping every 15 seconds,
+    and the default httpx timeout would drop the subscription between pings.
+    """
+    import httpx
     from sseclient import SSEClient
 
-    yield from events_from_sse(SSEClient(url))
+    with httpx.stream("GET", url, timeout=None) as response:
+        response.raise_for_status()
+        yield from events_from_sse(SSEClient(response.iter_bytes()))
