@@ -1,0 +1,51 @@
+{
+  "schemes": [
+    {
+      "id": "mh-distress-relief",
+      "name": "Maharashtra Fishermen Distress Relief",
+      "amount_inr": 200000,
+      "deadline_days": 30,
+      "documents": ["missing report", "boat licence", "family identity proof"],
+      "rules": {
+        "districts": ["Ratnagiri", "Sindhudurg", "Raigad"],
+        "requires_licence": true,
+        "min_overdue_hours": 2
+      }
+    },
+    {
+      "id": "pmmsy-insurance",
+      "name": "Pradhan Mantri Matsya Sampada insurance",
+      "amount_inr": 500000,
+      "deadline_days": 15,
+      "documents": ["boat licence", "aadhaar of each crew member", "bank passbook"],
+      "rules": {
+        "requires_licence": true,
+        "gear": ["gillnet", "longline", "purse-seine"],
+        "min_crew": 1
+      }
+    },
+    {
+      "id": "rtn-group-accident",
+      "name": "Ratnagiri group accident insurance for fishers",
+      "amount_inr": 100000,
+      "deadline_days": 7,
+      "documents": ["crew list", "community leader certificate"],
+      "rules": {
+        "districts": ["Ratnagiri"],
+        "min_crew": 1,
+        "home_port": "Harnai"
+      }
+    },
+    {
+      "id": "inland-pond-grant",
+      "name": "Inland pond rehabilitation grant",
+      "amount_inr": 25000,
+      "deadline_days": 45,
+      "documents": ["land record"],
+      "rules": {
+        "districts": ["Pune", "Nashik"],
+        "requires_licence": false
+      }
+    }
+  ]
+}
