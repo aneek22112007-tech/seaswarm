@@ -23,3 +23,11 @@ The dash is the em dash used in the room, not a hyphen. The name on the Mattermo
 When Ramesh does sign, the gate stores his username, his role, the message id, and the time. Only then does the release get a line in the audit. The operation log can be edited. The event log cannot. An update or a delete of an event is rejected.
 
 This is the whole argument. Agents propose. Humans dispose. The disposal is a sentence a specific person typed, and the archive can show it later to the family, the panchayat, or a reviewer who was not in the channel that afternoon.
+
+## The afternoon the memory is switched off
+
+Search software that forgets is dangerous in a different way. SeaSwarm can be started with persistence off. The agents then ignore the database and the earlier turns. Ask for a plan twice and the sectors are inserted twice. Ask Ramesh to sign and the approval is not stored, because the write was skipped. The same scenario with persistence on keeps three sectors and keeps his name on the escalation.
+
+The two logs are checked in next to the script that produced them. They are there so a demo can show the failure, not so that anyone runs a real search that way. The default is persistence on. The audit export reads the tables themselves, so the trail a reviewer opens is the one the database holds: assignments, corrections, evidence, and every sign-off, with who did each one.
+
+Sagar-4 in the demo is a scripted boat, with mock wind, tide, and schemes, on a fixed afternoon off Harnai. The shape of the room is what we would want on a real afternoon. The agents prepare the picture and the options. A named person decides. The thread remembers.
