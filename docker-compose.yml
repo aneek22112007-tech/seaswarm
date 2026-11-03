@@ -193,6 +193,28 @@ services:
         condition: service_healthy
     restart: "no"
 
+  adapters:
+    profiles: ["adapters"]
+    build: .
+    command: ["uvicorn", "adapters.gateway:app", "--host", "0.0.0.0", "--port", "8000"]
+    env_file:
+      - .env
+    environment:
+      SWITCH_URL: http://switch:8090
+      TELEGRAM_ENABLED: ${TELEGRAM_ENABLED:-false}
+      DISCORD_ENABLED: ${DISCORD_ENABLED:-false}
+    ports:
+      - "8091:8000"
+    depends_on:
+      switch:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
   echo-agent:
     profiles: ["echo"]
     build: .
