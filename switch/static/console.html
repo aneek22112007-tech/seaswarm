@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SeaSwarm Switch</title>
+  <style>
+    :root { color-scheme: light; --ink: #1c2b2a; --paper: #f4f1ea; --line: #d7d0c4; --agent: #1f6f5b; --human: #8a4b08; }
+    body { margin: 0; font: 16px/1.45 "Iowan Old Style", Palatino, Georgia, serif; background: var(--paper); color: var(--ink); }
+    header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--line); }
+    h1 { margin: 0; font-size: 1.6rem; }
+    p { margin: 0.35rem 0 0; }
+    main { padding: 1rem 1.5rem 3rem; max-width: 52rem; }
+    article { border-top: 1px solid var(--line); padding: 0.75rem 0; }
+    .who { font-variant: small-caps; letter-spacing: 0.04em; }
+    .agent { color: var(--agent); }
+    .human { color: var(--human); }
+    pre { white-space: pre-wrap; font: inherit; margin: 0.25rem 0 0; }
+    time { display: block; color: #66706e; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>SeaSwarm Switch</h1>
+    <p>Live room <strong id="room">sar-harnai</strong>. Agents propose. Humans dispose.</p>
+  </header>
+  <main id="log"></main>
+  <script>
+    const room = new URLSearchParams(location.search).get("room") || "sar-harnai";
+    document.getElementById("room").textContent = room;
+    const log = document.getElementById("log");
+    const seen = new Set();
+
+    function draw(event) {
+      if (!event || seen.has(event.message_id)) return;
+      seen.add(event.message_id);
+      const article = document.createElement("article");
+      const who = document.createElement("div");
+      who.className = "who " + (event.actor_type === "agent" ? "agent" : "human");
+      who.textContent = event.username + " · " + event.actor_type;
+      const body = document.createElement("pre");
+      body.textContent = event.text || "";
+      const time = document.createElement("time");
+      time.textContent = event.created_at || "";
+      article.append(who, body, time);
+      log.prepend(article);
+    }
+
+    async function load() {
+      const response = await fetch("/v1/rooms/" + room + "/history");
+      const events = await response.json();
+      events.forEach(draw);
+    }
+
+    load();
+    const source = new EventSource("/v1/events?room_id=" + encodeURIComponent(room) + "&agent=console");
+    source.onmessage = (message) => draw(JSON.parse(message.data));
+    setInterval(load, 4000);
+  </script>
+</body>
+</html>
