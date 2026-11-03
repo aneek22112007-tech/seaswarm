@@ -1,0 +1,15 @@
+# SeaSwarm on one VPS. Set the hostnames in the environment Caddy reads,
+# or replace the placeholders before you start the unit.
+#
+#   SEASWARM_HOST=sar.example.org
+#   SEASWARM_SWITCH_HOST=switch.example.org
+
+{$SEASWARM_HOST:sar.example.org} {
+	encode gzip
+	reverse_proxy 127.0.0.1:8065
+}
+
+{$SEASWARM_SWITCH_HOST:switch.example.org} {
+	encode gzip
+	reverse_proxy 127.0.0.1:8090
+}
