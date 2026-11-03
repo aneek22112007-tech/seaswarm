@@ -38,3 +38,21 @@ The replay posts into the live room and waits for each reply:
 8. Ramesh posts `/audit`. Markdown and PDF land in `.runtime/exports/`.
 
 The sign-off line uses an em dash. A hyphen does not count.
+
+## Human gate
+
+`agents/common/roles.py` maps Mattermost usernames to `community_leader`, `boat_owner`, `family_rep`, and `volunteer`. The room template is the source for the demo: Ramesh is the community leader, Sunita is the family representative.
+
+Every irreversible action goes through `agents/common/gate.py` and is stored as a pending approval. The irreversible set is escalation, spending money, a message that leaves the room, scheme outreach, and closing the search. Scheme outreach can be signed by the community leader or the family representative. The other four require the community leader.
+
+`perform_irreversible` is the only release. It raises if the approval row is missing, still pending, or rejected. A second release of the same row is refused. The test in `tests/test_gate.py` and the action-agent test both keep a pending escalation from running.
+
+## Audit and the kill switch
+
+`/audit` in the room, and `make audit` on the host, write a timestamped Markdown file and a PDF. The export lists the operation, the sector assignments, every sign-off with the approver and the message id, the evidence, and the append-only event log.
+
+`make killswitch` runs the same two planning passes twice. With persistence on, the second pass keeps three sectors and Ramesh's sign-off is stored. With `PERSISTENCE=off` the agents ignore the database, the second pass inserts the sectors again, and the sign-off is dropped. The two logs are `logs/persistence-on.txt` and `logs/persistence-off.txt`.
+
+## Deploy
+
+A single VPS uses Docker and Caddy. The Caddyfile, the systemd unit, and the steps are in [deploy/VPS.md](deploy/VPS.md).
