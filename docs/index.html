@@ -1,0 +1,40 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SeaSwarm · Agents propose, humans dispose</title>
+<meta name="description" content="A Switch-powered room where 3 AI agents and named humans co-run fishing-boat search-and-rescue in coastal Maharashtra. Human approval gate on every irreversible action. Full audit trail.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml"><meta name="theme-color" content="#06122a">
+<meta property="og:type" content="website"><meta property="og:title" content="SeaSwarm · Agents propose, humans dispose"><meta property="og:description" content="Human-governed search-and-rescue coordination room for coastal fishers, built on Switch."><meta property="og:url" content="https://aneek22112007-tech.github.io/seaswarm/"><meta property="og:image" content="https://aneek22112007-tech.github.io/seaswarm/og.png"><meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="3d.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+</head><body>
+<canvas id="scene" aria-hidden="true"></canvas>
+<nav><a href="#hero">SeaSwarm</a><a href="#agents">Agents</a><a href="#gate">Gate</a><a href="#kill">Kill switch</a><a href="#audit">Audit</a><a href="replay/">Replay</a><a href="https://github.com/aneek22112007-tech/seaswarm">GitHub</a></nav>
+<main>
+<section class="panel hero" id="hero" data-step="0"><div class="glass"><p class="eyebrow">Switch · Search &amp; Rescue · Harnai, Ratnagiri</p><h1>SeaSwarm</h1><p class="k">Agents propose. Humans dispose.</p><p>A Switch-powered room where three AI agents and named humans co-run a fishing-boat search and support the family. Nothing irreversible leaves the room until a named person signs off.</p><p style="margin-top:1.2rem"><a class="btn" href="replay/">▶ Watch the Sagar-4 replay</a><a class="btn o" href="https://github.com/aneek22112007-tech/seaswarm">View on GitHub</a></p></div></section>
+<section class="panel r" id="problem" data-step="1"><div class="glass"><p class="eyebrow">14:30 IST · Sagar-4 is overdue</p><h2>The group chat fails when it matters most.</h2><p>Sagar-4, three crew, out of Harnai. Overdue two hours. Last radio fix near a reef 6 km offshore. Four hours of daylight left.</p><p style="margin-top:.8rem">In a normal chat the position is buried in scrollback, two boats search the same stretch, and nobody can say who approved the Coast Guard call.</p></div></section>
+<section class="panel" id="agents" data-step="2"><div class="glass"><p class="eyebrow">Three agents, one room</p><h2>Context. Options. Action.</h2><div class="agents">
+<div class="agent"><b>🧭 Context</b> — last fix, crew, heading, wind, sea state and tide → a drift cone and the daylight left.</div>
+<div class="agent"><b>🗺️ Options</b> — splits the cone into sectors, posts exactly three plans: coverage, time, fuel, INR cost, daylight margin, risk. Never two boats in one sector.</div>
+<div class="agent"><b>🛟 Action</b> — drafts the Coast Guard escalation as <i>pending</i>, matches the family to welfare schemes, pins the checklist, logs evidence.</div></div>
+<p style="margin-top:.8rem;font-size:.9rem;opacity:.85">Option A: Meerabai → Sector-2 · 1.45 h · 4.1 L · INR 389.50. Every figure comes from pure functions in <code>core/</code>.</p></div></section>
+<section class="panel r" id="gate" data-step="3"><div class="glass"><p class="eyebrow">The human gate</p><h2>No sign-off, no escalation.</h2><p>Escalation, spending, outside messages, scheme outreach and closing the search wait for <code>Approved — escalation</code> from the right role.</p>
+<p class="deny" style="margin-top:.8rem">sunita (family_rep): Approved — escalation → ⛔ refused, escalation belongs to the community leader.</p>
+<p style="font-size:.9rem">ramesh (community_leader): Approved — escalation</p><div class="stamp" id="stamp">APPROVED · RAMESH</div></div></section>
+<section class="panel" id="kill" data-step="4"><div class="glass"><p class="eyebrow">The kill switch</p><h2>Remove the room. Watch it collapse.</h2><p>Same two planning passes, from <code>logs/</code>:</p><div class="cmp" style="margin-top:.6rem">
+<pre class="good">PERSISTENCE=on
+sectors: 3
+approvals: 1
+approver: ramesh</pre><pre class="bad glitch" id="badlog">PERSISTENCE=off
+sectors: 6 (each x2)
+approvals: 0
+approver: (none)</pre></div><p style="margin-top:.8rem"><b>That is why Switch is the product.</b></p></div></section>
+<section class="panel r" id="audit" data-step="5"><div class="glass"><p class="eyebrow">The audit trail is the product</p><h2>Every move, attributable.</h2><ul class="log" id="log">
+<li><time>14:30</time>ramesh reports Sagar-4 overdue</li><li><time>·</time>context posts summary + drift cone</li><li><time>·</time>options posts plans A / B / C</li><li><time>·</time>action stores PENDING escalation</li><li><time>·</time>sunita sign-off refused (role)</li><li><time>·</time>ramesh approves escalation</li><li><time>·</time>evidence: photo filed</li><li><time>·</time>/audit → Markdown + PDF</li></ul></div></section>
+<section class="panel" id="cta" data-step="6"><div class="glass"><p class="eyebrow">Run it</p><h2>One room. Many high-stakes rooms.</h2><pre>git clone https://github.com/aneek22112007-tech/seaswarm
+cd seaswarm && make up && make demo</pre><p style="margin:.8rem 0">121 tests passing · MIT · UN SDG 14 · Best Business Workflow</p><a class="btn" href="https://github.com/aneek22112007-tech/seaswarm">Star on GitHub</a><a class="btn o" href="https://github.com/aneek22112007-tech/seaswarm/blob/main/BLOG.md">Read the blog</a><a class="btn o" href="replay/">2D replay</a></div></section>
+</main>
+<div class="hint">scroll ↓</div>
+<footer>SeaSwarm · MIT · <a href="https://github.com/aneek22112007-tech/seaswarm">aneek22112007-tech/seaswarm</a> · 3D scene built in Three.js from primitives</footer>
+<script type="module" src="js/ocean.js"></script>
+</body></html>
