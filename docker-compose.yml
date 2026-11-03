@@ -15,7 +15,10 @@ services:
     restart: unless-stopped
 
   mattermost:
+    # The team-edition tag publishes linux/amd64 only. Apple Silicon runs it
+    # through emulation. An amd64 VPS runs it natively.
     image: mattermost/mattermost-team-edition:10.11.25
+    platform: linux/amd64
     depends_on:
       postgres:
         condition: service_healthy
@@ -40,12 +43,8 @@ services:
       - mm_logs:/mattermost/logs
       - mm_plugins:/mattermost/plugins
       - mm_client_plugins:/mattermost/client/plugins
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8065/api/v4/system/ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 30
-      start_period: 40s
+    # The team-edition image ships the server binary and no shell, so a curl
+    # probe cannot run inside it. Switch stays unhealthy until the bridge logs in.
     restart: unless-stopped
 
   switch:
@@ -70,13 +69,13 @@ services:
       - ./prompts:/app/prompts:ro
     depends_on:
       mattermost:
-        condition: service_healthy
+        condition: service_started
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8090/health"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
-      retries: 40
-      start_period: 15s
+      retries: 60
+      start_period: 20s
     restart: unless-stopped
 
   context-agent:
