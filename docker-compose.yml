@@ -163,6 +163,36 @@ services:
       retries: 20
     restart: unless-stopped
 
+  demo:
+    profiles: ["demo"]
+    build: .
+    command: ["python", "scripts/replay_demo.py"]
+    env_file:
+      - .env
+    environment:
+      SWITCH_URL: http://switch:8090
+      ROOM_ID: sar-harnai
+      DATABASE_URL: sqlite:////var/lib/seaswarm/seaswarm.db
+      DATA_DIR: /data
+      ROOM_TEMPLATE: /app/room_templates/sar_room.yaml
+      EXPORT_DIR: /var/lib/seaswarm/exports
+      PERSISTENCE: "on"
+      SEASWARM_SEED: "42"
+      LLM_API_KEY: ""
+    volumes:
+      - ./.runtime:/var/lib/seaswarm
+      - ./data:/data:ro
+      - ./room_templates:/app/room_templates:ro
+      - ./prompts:/app/prompts:ro
+    depends_on:
+      context-agent:
+        condition: service_healthy
+      options-agent:
+        condition: service_healthy
+      action-agent:
+        condition: service_healthy
+    restart: "no"
+
   echo-agent:
     profiles: ["echo"]
     build: .
