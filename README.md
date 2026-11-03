@@ -1,62 +1,174 @@
-# SeaSwarm
+<p align="center"><img src="docs/assets/hero.svg" alt="SeaSwarm — Agents propose. Humans dispose." width="100%"></p>
 
-SeaSwarm is a Switch-powered room where three agents and the people running a search coordinate a fishing-boat search, and support the family, in coastal Maharashtra. Agents suggest and keep track. Humans make the decisions. Nothing irreversible leaves the room until a named person signs off in the thread.
+<p align="center">
+<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=20&pause=1200&color=3FA9F5&center=true&vCenter=true&width=720&lines=A+boat+is+overdue.+The+room+takes+over.;3+agents+propose.+Named+humans+decide.;No+sign-off%2C+no+escalation.;The+audit+trail+is+the+product." alt="Typing SVG"></a>
+</p>
 
-The product is the audit trail.
+<p align="center">
+<a href="https://aneek22112007-tech.github.io/seaswarm/"><img src="https://img.shields.io/badge/live-showcase-ffd54f?style=for-the-badge&logo=githubpages&logoColor=black" alt="Live showcase"></a>
+<a href="https://github.com/aneek22112007-tech/seaswarm/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/aneek22112007-tech/seaswarm/ci.yml?branch=main&style=for-the-badge&label=CI" alt="CI"></a>
+<img src="https://img.shields.io/badge/tests-121%20passing-2e7d32?style=for-the-badge&logo=pytest&logoColor=white" alt="121 tests passing">
+<img src="https://img.shields.io/badge/python-3.11%2B-3776ab?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.11+">
+<img src="https://img.shields.io/badge/docker-compose-2496ed?style=for-the-badge&logo=docker&logoColor=white" alt="Docker Compose">
+<a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=for-the-badge" alt="MIT"></a>
+<img src="https://img.shields.io/badge/UN%20SDG-14-0a97d9?style=for-the-badge" alt="SDG 14">
+</p>
 
-## Run the stack
+<h3 align="center">A Switch-powered coordination room for fishing-boat search-and-rescue and family support in coastal Maharashtra.</h3>
 
-Docker is the runtime. Copy `.env.example` to `.env` yourself, or let `make up` do it the first time. Set `LLM_API_KEY` when you want the model to phrase figures that `core/` has already computed. Leave the key empty and the room hears that same wording from the fallback. Leave `MATTERMOST_BOT_TOKEN` empty and Switch creates the Mattermost bots on boot.
+<p align="center"><a href="https://aneek22112007-tech.github.io/seaswarm/"><b>▶ Open the animated showcase and Sagar-4 replay</b></a></p>
+
+---
+
+When a boat is overdue, the village WhatsApp/Telegram group is where everyone already is, and it's where coordination breaks: the last-known position gets buried, boats search the same stretch twice, and nobody can say who approved the Coast Guard call. **SeaSwarm turns that same chat into a governed, auditable operations room.**
+
+| | Agent | What it does |
+|---|---|---|
+| 🧭 | **Context** | Who is missing, since when, last fix, heading, drift cone, daylight left. Tags `@options`. |
+| 🗺️ | **Options** | Exactly 3 search plans with coverage, time, fuel, INR cost, daylight margin and risk flags. Re-plans live; never sends two boats to one sector. Tags `@action`. |
+| 🛟 | **Action** | Coast Guard / marine police escalation stored as *pending*, fishermen-welfare & insurance matching, pinned checklist, photo/GPS evidence. |
+
+> [!IMPORTANT]
+> 🔒 **Human gate:** nothing irreversible (escalation, spending, outside messages, scheme outreach, closing the search) happens until a named human with the right role replies `Approved — <action>`. Wrong role? The thread refuses it on screen.
+>
+> 📜 **The audit trail is the product.** Every assignment, correction and sign-off is timestamped and attributable. `/audit` exports Markdown + PDF.
+>
+> 🧪 **Deterministic.** Every number comes from pure functions in `core/`; the LLM only phrases it. 121 tests passing.
+
+<p align="center"><img src="docs/assets/flow.svg" alt="Agents to human gate to audit" width="100%"></p>
+
+## 🚀 Quickstart
 
 ```bash
-make up
+git clone https://github.com/aneek22112007-tech/seaswarm && cd seaswarm
+make up      # builds and waits for Postgres, Mattermost, Switch and the three agents
+make demo    # seeds the register and replays the Sagar-4 search
 ```
 
-`make up` builds the images and waits until Postgres, Mattermost, Switch, and the three agents are healthy.
-
-- Mattermost: http://localhost:8065
-- Switch console: http://localhost:8090
+- Mattermost: http://localhost:8065 · Switch console: http://localhost:8090
 - Team `seaswarm`, channel `sar-harnai`
-- `ramesh` / `SeaSwarm-Ramesh-2026!` (community leader)
-- `sunita` / `SeaSwarm-Sunita-2026!` (family representative)
+- `ramesh` / `SeaSwarm-Ramesh-2026!` (community leader) · `sunita` / `SeaSwarm-Sunita-2026!` (family representative)
 
-`make down` stops the containers. `make test` and `make lint` run pytest, ruff, and black.
+`LLM_API_KEY` is optional: leave it empty and the room hears the same figures in fallback wording. Leave `MATTERMOST_BOT_TOKEN` empty and Switch creates the bots on boot. `make down` stops, `make test` / `make lint` run pytest, ruff and black.
 
-## Demo
+## 🏗️ Architecture
 
-`make demo` seeds the boat register and replays one search. The boat is Sagar-4, three crew, out of Harnai in Ratnagiri. She is overdue by two hours. The last radio fix is a reef 6 km offshore. Four hours of daylight remain. The clock in the room template is 15 January 2026, 14:30 IST.
+```mermaid
+flowchart LR
+  subgraph Room["Mattermost #sar-harnai (Switch room)"]
+    H1["👤 Ramesh<br/>community_leader"]
+    H2["👤 Sunita<br/>family_rep"]
+  end
+  Room -- SSE events --> C["🧭 Context Agent"]
+  Room -- SSE events --> O["🗺️ Options Agent"]
+  Room -- SSE events --> A["🛟 Action Agent"]
+  C & O & A -- HTTP posts --> Room
+  C --> CORE["core/: drift · sectors · cost · risk · daylight · schemes_matcher"]
+  O --> CORE
+  A --> CORE
+  A --> G{"🔒 gate.py<br/>pending → approved?"}
+  G -- named role sign-off --> X["perform_irreversible<br/>(escalation, spend, outreach, close)"]
+  C & O & A & G --> DB[("SQLite<br/>operations · sectors · approvals · events · evidence")]
+  DB --> AU["📜 /audit → Markdown + PDF"]
+  D["data/*.json<br/>weather · tide · schemes · boats"] --> CORE
+```
 
-The replay posts into the live room and waits for each reply:
+## 🎬 Demo: Sagar-4
 
-1. Ramesh reports that Sagar-4 is overdue and not back.
-2. Context posts a one-screen summary: who is aboard, how long they have been out, the heading, the drift cone, and the daylight left. The message tags `@options`.
-3. Options splits the cone into three sectors and posts exactly three plans. Each plan carries coverage, time, fuel, cost in INR, daylight margin, and risk flags. The message tags `@action`.
-4. Action stores a pending Coast Guard and marine police escalation, matches the family to the scheme rules, and pins an operation checklist.
-5. Sunita replies `Approved — escalation`. The thread refuses her. Escalation belongs to the community leader.
-6. Ramesh replies `Approved — escalation`. The release is written into the audit with his name, role, message id, and time.
-7. Sunita files `photo: https://example.test/reef.jpg`.
-8. Ramesh posts `/audit`. Markdown and PDF land in `.runtime/exports/`.
+Sagar-4, three crew, out of Harnai in Ratnagiri, is overdue by two hours. The last radio fix is a reef 6 km offshore. Four hours of daylight remain. The room clock is 15 January 2026, 14:30 IST.
 
-The sign-off line uses an em dash. A hyphen does not count.
+```mermaid
+sequenceDiagram
+  autonumber
+  actor R as Ramesh (community_leader)
+  actor S as Sunita (family_rep)
+  participant C as Context
+  participant O as Options
+  participant A as Action
+  participant G as Gate + Audit
+  R->>C: "Sagar-4 overdue, not back"
+  C->>O: summary · drift cone · daylight · @options
+  O->>A: Options A / B / C with coverage, time, fuel, INR, risk · @action
+  A->>G: store PENDING escalation, match schemes, pin checklist
+  S->>G: "Approved — escalation"
+  G-->>S: ⛔ refused: escalation belongs to the community leader
+  R->>G: "Approved — escalation"
+  G-->>R: ✅ released, written with name, role, message id, time
+  S->>A: photo: https://example.test/reef.jpg
+  R->>G: /audit
+  G-->>R: Markdown + PDF in .runtime/exports/
+```
 
-## Human gate
+<details>
+<summary><b>📋 Plans the Options agent computes for the seeded room</b></summary>
 
-`agents/common/roles.py` maps Mattermost usernames to `community_leader`, `boat_owner`, `family_rep`, and `volunteer`. The room template is the source for the demo: Ramesh is the community leader, Sunita is the family representative.
+| Option | Boats | Sectors | Time | Fuel | Cost | Daylight margin |
+|---|---|---|---|---|---|---|
+| A | Meerabai | Sector-2 | 1.45 h | 4.1 L | INR 389.50 | 2.55 h |
+| B | Meerabai, Chandra-2 | Sector-2, Sector-1 | 1.65 h | 9.4 L | INR 893.00 | 2.35 h |
+| C | Meerabai, Chandra-2, Harnai-Queen | all three | 1.95 h | 16.7 L | INR 1586.50 | 2.05 h |
 
-Every irreversible action goes through `agents/common/gate.py` and is stored as a pending approval. The irreversible set is escalation, spending money, a message that leaves the room, scheme outreach, and closing the search. Scheme outreach can be signed by the community leader or the family representative. The other four require the community leader.
+Room commands: `reject option B`, `Sector-1 clear`, `reassign Meerabai to Sector-1`. The sign-off line uses an em dash; a hyphen does not count.
+</details>
 
-`perform_irreversible` is the only release. It raises if the approval row is missing, still pending, or rejected. A second release of the same row is refused. The test in `tests/test_gate.py` and the action-agent test both keep a pending escalation from running.
+<details>
+<summary><b>🔒 The human gate in detail</b></summary>
 
-## Audit and the kill switch
+`agents/common/roles.py` maps Mattermost usernames to `community_leader`, `boat_owner`, `family_rep` and `volunteer`. Every irreversible action goes through `agents/common/gate.py` and is stored as a pending approval. The irreversible set is escalation, spending money, a message that leaves the room, scheme outreach and closing the search. Scheme outreach can be signed by the community leader or the family representative; the other four require the community leader.
 
-`/audit` in the room, and `make audit` on the host, write a timestamped Markdown file and a PDF. The export lists the operation, the sector assignments, every sign-off with the approver and the message id, the evidence, and the append-only event log.
+`perform_irreversible` is the only release. It raises if the approval row is missing, pending or rejected, and refuses a second release of the same row. `tests/test_gate.py` and the action-agent test prove a pending escalation cannot run.
+</details>
 
-`make killswitch` runs the same two planning passes twice. With persistence on, the second pass keeps three sectors and Ramesh's sign-off is stored. With `PERSISTENCE=off` the agents ignore the database, the second pass inserts the sectors again, and the sign-off is dropped. The two logs are `logs/persistence-on.txt` and `logs/persistence-off.txt`.
+## 🔌 The kill switch
 
-## Optional chat doors
+`make killswitch` runs the same two planning passes with and without room persistence:
 
-Telegram and Discord stay off unless you set `TELEGRAM_ENABLED` or `DISCORD_ENABLED`. `make` does not start them. Bring the adapter up with `docker compose --profile adapters up -d adapters`. It listens on port 8091. While the flags are false, `/telegram` and `/discord` acknowledge the payload and do not post into the room. A forwarded line uses the sender's username, so `ramesh` on Telegram is the same role as `ramesh` in Mattermost.
+| | `PERSISTENCE=on` ✅ | `PERSISTENCE=off` 💥 |
+|---|---|---|
+| Sectors after two passes | 3 (Sector-1/2/3 ×1) | **6** (each ×2) |
+| Stored approvals | 1, approver `ramesh` | **0** |
+| Sign-off reply | "ramesh (community_leader) approved escalation." | "No pending approval for escalation. The sign-off was not applied." |
 
-## Deploy
+Logs: [`logs/persistence-on.txt`](logs/persistence-on.txt) · [`logs/persistence-off.txt`](logs/persistence-off.txt). Remove the room and the operation collapses. **That is why Switch is the product.**
 
-A single VPS uses Docker and Caddy. The Caddyfile, the systemd unit, and the steps are in [deploy/VPS.md](deploy/VPS.md).
+<details>
+<summary><b>📜 Audit export</b></summary>
+
+`/audit` in the room, and `make audit` on the host, write a timestamped Markdown file and a PDF listing the operation, sector assignments, every sign-off with approver and message id, the evidence, and the append-only event log.
+</details>
+
+<details>
+<summary><b>💬 Optional Telegram / Discord doors</b></summary>
+
+Off unless `TELEGRAM_ENABLED` or `DISCORD_ENABLED` is set. Start with `docker compose --profile adapters up -d adapters` (port 8091). A forwarded line keeps the sender's username, so `ramesh` on Telegram has the same role as in Mattermost.
+</details>
+
+## 🧰 Tech stack
+
+<p>
+<img src="https://img.shields.io/badge/Switch-protocol-0b1d3a?style=flat-square">
+<img src="https://img.shields.io/badge/Mattermost-0058cc?style=flat-square&logo=mattermost&logoColor=white">
+<img src="https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white">
+<img src="https://img.shields.io/badge/SQLAlchemy%20%2B%20Alembic-d71f00?style=flat-square">
+<img src="https://img.shields.io/badge/SQLite-003b57?style=flat-square&logo=sqlite&logoColor=white">
+<img src="https://img.shields.io/badge/Postgres-4169e1?style=flat-square&logo=postgresql&logoColor=white">
+<img src="https://img.shields.io/badge/pytest-0a9edc?style=flat-square&logo=pytest&logoColor=white">
+<img src="https://img.shields.io/badge/ruff%20%2B%20black-000?style=flat-square">
+<img src="https://img.shields.io/badge/Caddy-1f88c0?style=flat-square&logo=caddy&logoColor=white">
+<img src="https://img.shields.io/badge/GitHub%20Actions-2088ff?style=flat-square&logo=githubactions&logoColor=white">
+</p>
+
+## 🌐 Deploy
+
+A single VPS with Docker and Caddy. The Caddyfile, systemd unit and steps are in [deploy/VPS.md](deploy/VPS.md). The static showcase lives in [`docs/`](docs/) and is served by GitHub Pages at **https://aneek22112007-tech.github.io/seaswarm/**.
+
+## 🌍 Impact & track fit
+
+- **UN SDG 14 (Life Below Water)** and disaster management for small-scale fishers.
+- One governance template (agents propose, humans dispose) for flood response, factory safety and health-worker rooms.
+- **Best Business Workflow** (primary) · **Best Blog**: [BLOG.md](BLOG.md) · **Code with Wispr**.
+- More detail: [ARCHITECTURE.md](ARCHITECTURE.md).
+
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=waving&color=0:0d5fa8,100:3fa9f5&height=120&section=footer&text=Agents%20propose.%20Humans%20dispose.&fontSize=22&fontColor=ffffff" width="100%"></p>
+
+<p align="center">MIT © aneek22112007-tech</p>
