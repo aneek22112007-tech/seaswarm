@@ -30,9 +30,38 @@ def dispatch(event: dict, handler: Handler, client: SwitchClient) -> list[str]:
     posted = []
     for text in texts:
         if text.strip():
-            client.post(text)
+            if text.startswith("## Operation"):
+                deliver_pinned(client, text)
+            else:
+                client.post(text)
             posted.append(text)
     return posted
+
+
+def deliver_pinned(client: SwitchClient, text: str) -> None:
+    """Pin the operation log once, then edit that same message on later updates."""
+    from agents.common.db import init_db, session_scope
+    from agents.common.room import load_room
+    from agents.common.store import find_open_operation, list_events, record_event
+
+    engine = init_db()
+    with session_scope(engine) as session:
+        operation = find_open_operation(session, load_room()["boat_id"])
+        pins = list_events(session, operation.id, kind="ops_pin") if operation is not None else []
+        if pins:
+            client.edit(pins[-1].body, text)
+            return
+        posted = client.post(text, pin=True)
+        message_id = str(posted.get("message_id") or "")
+        if operation is not None and message_id:
+            record_event(
+                session,
+                op_id=operation.id,
+                actor=client.agent,
+                actor_type="agent",
+                kind="ops_pin",
+                body=message_id,
+            )
 
 
 def loop(agent_name: str, handler: Handler, client: SwitchClient | None = None) -> None:
@@ -49,7 +78,11 @@ def loop(agent_name: str, handler: Handler, client: SwitchClient | None = None) 
             return
 
 
-def serve(agent_name: str, handler: Handler) -> FastAPI:
+def serve(
+    agent_name: str,
+    handler: Handler,
+    extras: list[Callable[[], None]] | None = None,
+) -> FastAPI:
     @asynccontextmanager
     async def lifespan(_app: FastAPI):
         if os.getenv("SEASWARM_DISABLE_LOOP") != "1":
@@ -60,6 +93,12 @@ def serve(agent_name: str, handler: Handler) -> FastAPI:
                 daemon=True,
             )
             thread.start()
+            for extra in extras or []:
+                threading.Thread(
+                    target=extra,
+                    name=f"{agent_name}-extra",
+                    daemon=True,
+                ).start()
         yield
 
     app = FastAPI(title=f"SeaSwarm {agent_name}", lifespan=lifespan)
