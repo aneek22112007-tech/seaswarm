@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Human-gated search coordination for coastal Maharashtra fishing villages."
 readme = "README.md"
 requires-python = ">=3.11"
-license = { text = "MIT" }
+license = "MIT"
 authors = [{ name = "SeaSwarm contributors" }]
 dependencies = [
     "fastapi>=0.115.0",
