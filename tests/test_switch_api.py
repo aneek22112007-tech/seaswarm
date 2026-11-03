@@ -13,6 +13,13 @@ def _client() -> TestClient:
     return TestClient(create_app(enable_bridge=False))
 
 
+def test_subscribers_route_is_empty_without_a_listener():
+    with _client() as client:
+        response = client.get("/v1/rooms/sar-harnai/subscribers")
+        assert response.status_code == 200
+        assert response.json() == {"agents": []}
+
+
 def test_health_is_ready_when_the_bridge_is_off():
     with _client() as client:
         response = client.get("/health")
