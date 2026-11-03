@@ -77,12 +77,12 @@ const oceanMat = new THREE.ShaderMaterial({
   }
   void main(){
     vec3 V = normalize(cameraPosition - vW); vec3 N = normalize(vN);
-    float fres = pow(1.0 - max(dot(N,V),0.0), 4.0);
-    vec3 deep = vec3(0.01,0.06,0.13), shallow = vec3(0.04,0.22,0.32), skyc = vec3(0.55,0.45,0.55);
+    float fres = pow(1.0 - clamp(abs(dot(N,V)),0.0,1.0), 5.0);
+    vec3 deep = vec3(0.01,0.06,0.13), shallow = vec3(0.03,0.16,0.24), skyc = vec3(0.55,0.45,0.55);
     vec3 col = mix(deep, shallow, clamp(vW.y*0.4+0.4,0.0,1.0));
-    col = mix(col, skyc, fres*0.8);
+    col = mix(col, skyc, fres*0.55);
     vec3 H = normalize(uSun + V); col += vec3(1.0,0.72,0.45)*pow(max(dot(N,H),0.0), 260.0)*3.0;
-    col += vec3(0.9,0.95,1.0)*smoothstep(0.9,1.6,vW.y)*0.25; // crest foam
+    col += vec3(0.9,0.95,1.0)*smoothstep(2.2,3.2,vW.y)*0.12; // crest foam
     if(uSector>0.001){
       float idx, edge; float m = sectorMask(vXZ, 0.0, idx, edge);
       if(m>0.0){
@@ -90,7 +90,7 @@ const oceanMat = new THREE.ShaderMaterial({
         vec3 base = mix(vec3(1.0,0.75,0.2), vec3(0.3,1.0,0.5), cl);
         float grid = smoothstep(0.08,0.0,abs(fract(length(vXZ)/10.0)-0.5)-0.45);
         float pulse = 0.6+0.4*sin(uTime*2.0 - length(vXZ)*0.08);
-        col += base*uSector*(0.10 + edge*0.9*pulse + grid*0.25 + cl*0.15);
+        col += base*uSector*(0.02 + edge*0.6*pulse + grid*0.18 + cl*0.12);
       }
       if(uDup>0.001){
         float j = step(0.5, fract(uTime*7.0)) * 0.06;
@@ -139,10 +139,10 @@ const searchers = [0xffb300, 0x26a69a, 0xab47bc].map((c, i) => {
 const K = [
   { p: [0, 9, 34], t: [0, 3, 0], sec: 0 },          // hero
   { p: [22, 6, 18], t: [0, 2, 0], sec: 0 },         // problem: close on Sagar-4
-  { p: [-60, 90, 70], t: [-10, 0, -40], sec: 1 },   // agents: drift cone from above
-  { p: [14, 7, 22], t: [0, 4, 0], sec: 1 },         // gate
-  { p: [-30, 120, 30], t: [-20, 0, -50], sec: 1, dup: 1 }, // kill switch
-  { p: [-90, 60, -10], t: [-20, 0, -60], sec: 1, clear: 1 }, // audit: sectors cleared
+  { p: [60, 110, -50], t: [-40, 0, 30], sec: 1 },   // agents: drift cone from above
+  { p: [14, 7, 22], t: [-8, 4, 6], sec: 1 },         // gate
+  { p: [70, 140, -60], t: [-40, 0, 30], sec: 1, dup: 1 }, // kill switch
+  { p: [-60, 100, 140], t: [-50, 0, 20], sec: 1, clear: 1 }, // audit: sectors cleared
   { p: [0, 30, 90], t: [0, 0, -30], sec: 1, clear: 1 },     // CTA
 ];
 const state = { px: 0, py: 9, pz: 34, tx: 0, ty: 3, tz: 0, sec: 0, dup: 0, clear: 0, go: 0 };
@@ -182,10 +182,10 @@ function frame() {
   rings.forEach(r => { const p = (t * 0.5 + r.userData.o) % 1; r.position.set(0, 0.6, 0); r.scale.setScalar(1 + p * 18); r.material.opacity = (1 - p) * 0.8; });
   beaconLight.intensity = 20 + Math.sin(t * 6) * 15;
   searchers.forEach((b, i) => {
-    const u = b.userData; u.p = THREE.MathUtils.clamp(u.p + (state.go ? dt * 0.08 : -dt * 0.2), 0, 1);
+    const u = b.userData; u.p = THREE.MathUtils.clamp(u.p + (state.go ? dt * 0.22 : -dt * 0.3), 0, 1);
     const e = u.p * u.p * (3 - 2 * u.p); const x = THREE.MathUtils.lerp(u.from.x, u.to.x, e), z = THREE.MathUtils.lerp(u.from.y, u.to.y, e);
     place(b, x, z, t, Math.atan2(u.to.x - u.from.x, u.to.y - u.from.y));
-    const target = state.clear ? (u.p > 0.95 ? 1 : 0) : 0;
+    const target = state.clear;
     cleared.setComponent(i, cleared.getComponent(i) + (target - cleared.getComponent(i)) * dt * (0.6 + i * 0.3));
   });
   camera.position.set(state.px, state.py, state.pz); look.set(state.tx, state.ty, state.tz); camera.lookAt(look);
