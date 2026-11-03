@@ -1,0 +1,8 @@
+{
+  "station": "Harnai",
+  "current_to_deg": 200,
+  "current_speed_kn": 0.6,
+  "tide_state": "ebb",
+  "height_m": 1.8,
+  "next_turn": "18:10"
+}
