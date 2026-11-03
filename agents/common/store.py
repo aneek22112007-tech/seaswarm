@@ -13,7 +13,16 @@ from datetime import datetime
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from agents.common.models import Approval, Boat, Event, Operation, Position, Sector, utcnow
+from agents.common.models import (
+    Approval,
+    Boat,
+    Event,
+    Evidence,
+    Operation,
+    Position,
+    Sector,
+    utcnow,
+)
 from agents.common.settings import get_settings
 
 
@@ -154,3 +163,60 @@ def find_pending_approval(session: Session, op_id: int, action_type: str) -> App
         )
         .order_by(Approval.id.desc())
     ).first()
+
+
+def list_approvals(session: Session, op_id: int) -> list[Approval]:
+    if not persistence_enabled():
+        return []
+    return list(
+        session.scalars(select(Approval).where(Approval.op_id == op_id).order_by(Approval.id)).all()
+    )
+
+
+def latest_approval(session: Session, op_id: int, action_type: str) -> Approval | None:
+    rows = [row for row in list_approvals(session, op_id) if row.action_type == action_type]
+    return rows[-1] if rows else None
+
+
+def add_evidence(
+    session: Session,
+    *,
+    op_id: int,
+    kind: str,
+    uri: str,
+    submitted_by: str,
+    sector_id: int | None = None,
+    created_at: datetime | None = None,
+) -> Evidence | None:
+    if not persistence_enabled():
+        return None
+    row = Evidence(
+        op_id=op_id,
+        sector_id=sector_id,
+        kind=kind,
+        uri=uri,
+        submitted_by=submitted_by,
+        created_at=created_at or utcnow(),
+    )
+    session.add(row)
+    session.flush()
+    return row
+
+
+def list_evidence(session: Session, op_id: int) -> list[Evidence]:
+    if not persistence_enabled():
+        return []
+    return list(
+        session.scalars(select(Evidence).where(Evidence.op_id == op_id).order_by(Evidence.id)).all()
+    )
+
+
+def set_operation_status(session: Session, op_id: int, status: str) -> Operation | None:
+    if not persistence_enabled():
+        return None
+    operation = session.get(Operation, op_id)
+    if operation is None:
+        return None
+    operation.status = status
+    session.flush()
+    return operation
