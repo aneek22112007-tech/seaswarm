@@ -1,0 +1,59 @@
+{
+  "boats": [
+    {
+      "id": "sagar-4",
+      "name": "Sagar-4",
+      "owner": "Prakash Jadhav",
+      "licence_no": "RTN-FISH-2019-1142",
+      "district": "Ratnagiri",
+      "home_port": "Harnai",
+      "crew": [
+        {"name": "Prakash Jadhav", "role": "skipper", "age": 42},
+        {"name": "Amit Jadhav", "role": "crew", "age": 28},
+        {"name": "Imran Shaikh", "role": "crew", "age": 35}
+      ],
+      "gear": "gillnet",
+      "family_rep": "sunita"
+    },
+    {
+      "id": "meerabai",
+      "name": "Meerabai",
+      "owner": "Lata Pawar",
+      "licence_no": "RTN-FISH-2018-0881",
+      "district": "Ratnagiri",
+      "home_port": "Harnai",
+      "crew": [
+        {"name": "Lata Pawar", "role": "skipper", "age": 46},
+        {"name": "Nilesh Pawar", "role": "crew", "age": 24}
+      ],
+      "gear": "gillnet"
+    },
+    {
+      "id": "chandra-2",
+      "name": "Chandra-2",
+      "owner": "Yusuf Khan",
+      "licence_no": "RTN-FISH-2020-2210",
+      "district": "Ratnagiri",
+      "home_port": "Harnai",
+      "crew": [
+        {"name": "Yusuf Khan", "role": "skipper", "age": 39},
+        {"name": "Farhan Khan", "role": "crew", "age": 22}
+      ],
+      "gear": "longline"
+    },
+    {
+      "id": "harnai-queen",
+      "name": "Harnai-Queen",
+      "owner": "Suresh More",
+      "licence_no": "RTN-FISH-2017-0444",
+      "district": "Ratnagiri",
+      "home_port": "Harnai",
+      "crew": [
+        {"name": "Suresh More", "role": "skipper", "age": 51},
+        {"name": "Raju More", "role": "crew", "age": 30},
+        {"name": "Santosh Bhosale", "role": "crew", "age": 33}
+      ],
+      "gear": "gillnet"
+    }
+  ]
+}

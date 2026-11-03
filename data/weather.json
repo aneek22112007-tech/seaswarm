@@ -1,0 +1,9 @@
+{
+  "station": "Harnai",
+  "wind_from_deg": 270,
+  "wind_speed_kn": 14,
+  "wave_height_m": 1.4,
+  "sea_state": 4,
+  "rough_after": "16:30",
+  "visibility_km": 8
+}
