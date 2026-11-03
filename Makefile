@@ -1,7 +1,7 @@
 PY := $(shell if [ -x .venv/bin/python ]; then echo .venv/bin/python; else echo python3; fi)
 COMPOSE := docker compose
 
-.PHONY: up down test lint fmt migrate
+.PHONY: up down test lint fmt migrate audit
 
 up:
 	@test -f .env || cp .env.example .env
@@ -23,3 +23,7 @@ fmt:
 
 migrate:
 	$(PY) -m alembic upgrade head
+
+audit:
+	mkdir -p .runtime/exports
+	EXPORT_DIR=./.runtime/exports $(PY) scripts/export_audit.py
