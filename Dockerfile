@@ -14,6 +14,8 @@ COPY adapters ./adapters
 COPY data ./data
 COPY prompts ./prompts
 COPY room_templates ./room_templates
+COPY alembic.ini ./
+COPY alembic ./alembic
 
 RUN pip install --no-cache-dir .
 
