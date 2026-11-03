@@ -1,0 +1,28 @@
+room_id: sar-harnai
+title: Harnai Search Room
+team: seaswarm
+channel: sar-harnai
+scenario_now: "2026-01-15T14:30:00+05:30"
+scenario_hhmm: "14:30"
+daylight_hours_left: 4.0
+overdue_hours: 2.0
+heading_deg: 250
+rough_after: "16:30"
+boat_id: sagar-4
+last_known:
+  lat: 17.8136
+  lon: 73.0394
+  source: radio
+  reported_at: "2026-01-15T12:30:00+05:30"
+roles:
+  ramesh: community_leader
+  sunita: family_rep
+  admin: community_leader
+search_boats:
+  - Meerabai
+  - Chandra-2
+  - Harnai-Queen
+agents:
+  - context
+  - options
+  - action
