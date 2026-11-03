@@ -1,0 +1,16 @@
+[Unit]
+Description=SeaSwarm search room
+After=docker.service network-online.target
+Requires=docker.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/opt/seaswarm
+ExecStart=/usr/bin/docker compose up --build -d --wait
+ExecStop=/usr/bin/docker compose down
+TimeoutStartSec=600
+
+[Install]
+WantedBy=multi-user.target
