@@ -1,0 +1,11 @@
+SeaSwarm kill-switch demo
+Scenario: Sagar-4, 3 crew, Harnai, Ratnagiri. Overdue 2 hours. Same two planning passes.
+PERSISTENCE=on
+option A coverage=100.0
+sectors_after_two_passes=3
+sector_rows=Sector-1 x1, Sector-2 x1, Sector-3 x1
+approval_request_stored=true
+stored_approvals=1
+approver=ramesh
+sign-off reply: ramesh (community_leader) approved escalation.
+Result: the second pass updated the same sectors and the sign-off was stored.

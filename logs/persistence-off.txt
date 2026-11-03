@@ -1,0 +1,11 @@
+SeaSwarm kill-switch demo
+Scenario: Sagar-4, 3 crew, Harnai, Ratnagiri. Overdue 2 hours. Same two planning passes.
+PERSISTENCE=off
+option A coverage=100.0
+sectors_after_two_passes=6
+sector_rows=Sector-1 x2, Sector-2 x2, Sector-3 x2
+approval_request_stored=false
+stored_approvals=0
+approver=(none)
+sign-off reply: No pending approval for escalation. The sign-off was not applied.
+Result: sectors were duplicated and the sign-off was not stored.
