@@ -5,7 +5,7 @@ nav{position:fixed;top:1rem;left:50%;transform:translateX(-50%);z-index:5;displa
 nav a{color:#eaf4ff;text-decoration:none;opacity:.8}nav a:hover{opacity:1;color:var(--gold)}
 main{position:relative;z-index:2}.panel{min-height:100vh;display:flex;align-items:center;padding:0 7vw}.panel.r{justify-content:flex-end}
 .glass{max-width:520px;padding:2rem 2.2rem;border-radius:24px;background:var(--glass);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);border:1px solid var(--line);box-shadow:0 20px 60px rgba(0,0,0,.35)}
-.hero h1{font-size:clamp(3.2rem,9vw,7.5rem);line-height:1;letter-spacing:-.03em;font-weight:800;background:linear-gradient(120deg,#fff,#9fd8ff 60%,#ffd54f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero h1{font-size:clamp(3rem,6.5vw,5.4rem);line-height:1;letter-spacing:-.03em;font-weight:800;background:linear-gradient(120deg,#fff,#9fd8ff 60%,#ffd54f);-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero p.k{font-size:clamp(1.1rem,2.4vw,1.6rem);color:#cfe9ff;margin:.8rem 0 1.4rem}
 .eyebrow{text-transform:uppercase;letter-spacing:.2em;font-size:.75rem;color:var(--gold)}h2{font-size:clamp(1.8rem,4vw,2.8rem);line-height:1.15;margin:.4rem 0 1rem;letter-spacing:-.02em}
 .btn{display:inline-block;padding:.85rem 1.5rem;border-radius:999px;background:var(--gold);color:#111;font-weight:700;text-decoration:none;margin:.3rem .5rem .3rem 0}.btn.o{background:transparent;color:#fff;border:1px solid var(--line)}
