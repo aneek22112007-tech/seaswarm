@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 from datetime import datetime
+from pathlib import Path
 
-from agents.action_agent.commands import is_mention, wants_close
+from agents.action_agent.commands import is_audit, is_mention, wants_close
 from agents.action_agent.draft import (
     escalation_payload,
     family_profile,
@@ -15,6 +16,7 @@ from agents.action_agent.draft import (
 from agents.action_agent.evidence import parse_evidence
 from agents.action_agent.followup import next_followup
 from agents.action_agent.log import render_ops_log
+from agents.common.audit import export_audit
 from agents.common.db import init_db, session_scope
 from agents.common.gate import (
     GateError,
@@ -56,6 +58,8 @@ def build_reply(session, event: dict) -> str | list[str]:
     text = (event.get("text") or "").strip()
     actor = event.get("actor_type") or ""
     username = event.get("username") or "unknown"
+    if actor == "human" and is_audit(text):
+        return _audit_reply(session, username)
     room = load_room()
     catalog = {boat["id"]: boat for boat in load_json("boats.json")["boats"]}
     boat = catalog.get(room["boat_id"])
@@ -244,8 +248,23 @@ def _ops_log(session, operation, boat: dict, room: dict) -> str:
     )
 
 
+def _audit_reply(session, username: str) -> str:
+    exported = export_audit(
+        session,
+        Path(get_settings().export_dir),
+        actor=username,
+        actor_type="human",
+    )
+    return (
+        f"Audit written to {exported.markdown_path.name} and {exported.pdf_path.name}. "
+        f"Events: {exported.event_count}. Sign-offs: {exported.signoff_count}."
+    )
+
+
 def _interesting(event: dict, text: str) -> bool:
     actor = event.get("actor_type") or ""
+    if actor == "human" and is_audit(text):
+        return True
     if actor == "human" and (
         parse_decision(text) is not None or parse_evidence(text) is not None or wants_close(text)
     ):

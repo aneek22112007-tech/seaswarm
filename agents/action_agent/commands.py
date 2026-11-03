@@ -13,3 +13,7 @@ def is_mention(text: str) -> bool:
 
 def wants_close(text: str) -> bool:
     return CLOSE_RE.search(text) is not None
+
+
+def is_audit(text: str) -> bool:
+    return text.strip() == "/audit"
