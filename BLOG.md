@@ -11,3 +11,15 @@ The context agent may notice that a boat is overdue and put the situation on one
 The options agent may cut that cone into sectors and offer three plans. Each plan has a coverage percentage, a time, a fuel figure, a cost in rupees, a daylight margin, and a risk flag when the arithmetic says the search would still be out in rough water after 16:30. A person can clear a sector, move a boat, or reject a plan. The agent re-plans from the rows it has. It will not put two boats on one sector, and it will say the conflict out loud instead of quietly overwriting the assignment.
 
 The action agent may draft the escalation to the Coast Guard and the marine police, and it may match the family to the public schemes with a rules engine: district, licence, gear, crew, port, documents, deadline. The draft sits in the thread as pending. The scheme note sits beside it. A pinned checklist shows what is done and what is still a decision.
+
+## What a human has to do
+
+Nothing in that list sends a message outside the room, spends money, or closes the search. Those wait for a sentence in the thread:
+
+`Approved — escalation`
+
+The dash is the em dash used in the room, not a hyphen. The name on the Mattermost account has to carry the role. In the Harnai demo, Ramesh is the community leader and Sunita speaks for the family. Sunita can sign the scheme outreach, because that packet is for her household. She cannot sign the escalation. When she tries, the thread answers, in so many words, that only the community leader can approve it. The pending row stays pending. There is no second code path that "helps" by sending it anyway.
+
+When Ramesh does sign, the gate stores his username, his role, the message id, and the time. Only then does the release get a line in the audit. The operation log can be edited. The event log cannot. An update or a delete of an event is rejected.
+
+This is the whole argument. Agents propose. Humans dispose. The disposal is a sentence a specific person typed, and the archive can show it later to the family, the panchayat, or a reviewer who was not in the channel that afternoon.
